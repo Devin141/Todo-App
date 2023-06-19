@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addTodoAsync } from '../redux/todoSlice';
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { createTodo } from '../redux/todoSlice'
 
 const AddTodoForm = () => {
-	const [value, setValue] = useState('');
-	const dispatch = useDispatch();
+	const [value, setValue] = useState('')
+	const dispatch = useDispatch()
 
 	const onSubmit = (event) => {
-		event.preventDefault();
+		event.preventDefault()
 			dispatch(
-				addTodoAsync({
+				createTodo({
 					title: value,
-				})
-			);
-	};
+				}))}
 
 	return (
 		<form onSubmit={onSubmit} className='form-inline mt-3 mb-3'>

@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { toggleCompleteAsync, deleteTodoAsync, editTodo } from '../redux/todoSlice';
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { toggleComplete, deleteTodo, editTodo } from '../redux/todoSlice'
 
 const TodoItem = ({ id, title, completed }) => {
 	const dispatch = useDispatch();
 	const [updatedValue, setUpdatedValue] = useState('')
 	const [editing, setEditing] = useState(false)
 
-	const handleCheckboxClick = () => {
-		dispatch(toggleCompleteAsync({ id, completed: !completed }));
+	const handleCheckbox = () => {
+		dispatch(toggleComplete({ id, completed: !completed }))
 	}
 
-	const handleDeleteClick = () => {
-		dispatch(deleteTodoAsync({ id }));
+	const handleDelete = () => {
+		dispatch(deleteTodo({ id }))
 	}
 
 	const handleEdit = () => {
 		setEditing(true)
 	}
 
-	const handleEditSubmit = (event) => {
+	const handleSubmitEdit = (event) => {
 		event.preventDefault()
 		dispatch(editTodo({ id, title: updatedValue }))
 		setEditing(false)
@@ -37,12 +37,13 @@ const TodoItem = ({ id, title, completed }) => {
 		></input>
          {title}
 
-		<button onClick={handleEditSubmit} className='btn btn-danger'>
+		<button onClick={handleSubmitEdit} className='btn btn-danger'>
 		    Submit
 		</button>
 	</div>
 		)
 	}
+
 	return (
 		<li className={`list-group-item ${completed && 'list-group-item-success'}`}>
 			<div className='d-flex justify-content-between'>
@@ -51,19 +52,19 @@ const TodoItem = ({ id, title, completed }) => {
 						type='checkbox'
 						className='mr-3'
 						checked={completed}
-						onClick={handleCheckboxClick}
+						onClick={handleCheckbox}
 					></input>
 					{title}
 				</span>
 				<button onClick={handleEdit} className='btn btn-danger'>
 					Edit
 				</button>
-				<button onClick={handleDeleteClick} className='btn btn-danger'>
+				<button onClick={handleDelete} className='btn btn-danger'>
 					Delete
 				</button>
 			</div>
 		</li>
-	);
-};
+	)
+}
 
 export default TodoItem;

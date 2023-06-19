@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AddTodoForm from './components/AddTodoForm';
-import TodoList from './components/TodoList';
+import AddTodoForm from './components/createTodo';
+import TodoList from './components/displayTodoList';
 import TotalCompleteItems from './components/TotalCompleteItems';
 
 const App = () => {

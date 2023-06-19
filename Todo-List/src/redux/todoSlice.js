@@ -1,18 +1,17 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { nanoid } from 'nanoid';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-export const getTodosAsync = createAsyncThunk(
+export const getTodos = createAsyncThunk(
 	'todos/getTodosAsync',
 	async () => {
-		const res = await fetch('http://localhost:7000/todos');
+		const res = await fetch('http://localhost:7000/todos')
 		if (res.ok) {
-			const todos = await res.json();
-			return { todos };
+			const todos = await res.json()
+			return { todos }
 		}
 	}
 );
 
-export const addTodoAsync = createAsyncThunk(
+export const createTodo = createAsyncThunk(
 	'todos/addTodoAsync',
 	async (payload) => {
 		const res = await fetch('http://localhost:7000/todos', {
@@ -24,14 +23,14 @@ export const addTodoAsync = createAsyncThunk(
 		});
 
 		if (res.ok) {
-			const todo = await res.json();
-			return { todo };
+			const todo = await res.json()
+			return { todo }
 		}
 	}
 );
 
-export const toggleCompleteAsync = createAsyncThunk(
-	'todos/completeTodoAsync',
+export const toggleComplete = createAsyncThunk(
+	'todos/toggleComplete',
 	async (payload) => {
 		const res = await fetch(`http://localhost:7000/todos/${payload.id}`, {
 			method: 'PATCH',
@@ -39,24 +38,24 @@ export const toggleCompleteAsync = createAsyncThunk(
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({ completed: payload.completed }),
-		});
+		})
 
 		if (res.ok) {
-			const todo = await res.json();
-			return { todo };
+			const todo = await res.json()
+			return { todo }
 		}
 	}
-);
+)
 
-export const deleteTodoAsync = createAsyncThunk(
+export const deleteTodo = createAsyncThunk(
 	'todos/deleteTodoAsync',
 	async (payload) => {
-		const resp = await fetch(`http://localhost:7000/todos/${payload.id}`, {
+		const res = await fetch(`http://localhost:7000/todos/${payload.id}`, {
 			method: 'DELETE',
 		});
 
-		if (resp.ok) {
-			return { id: payload.id };
+		if (res.ok) {
+			return { id: payload.id }
 		}
 	}
 );
@@ -65,52 +64,32 @@ export const todoSlice = createSlice({
 	name: 'todos',
 	initialState: [],
 	reducers: {
-		addTodo: (state, action) => {
-			const todo = {
-				id: nanoid(),
-				title: action.payload.title,
-				completed: false,
-			};
-			state.push(todo);
-		},
-		toggleComplete: (state, action) => {
-			const index = state.findIndex((todo) => todo.id === action.payload.id);
-			state[index].completed = action.payload.completed;
-		},
-		deleteTodo: (state, action) => {
-			return state.filter((todo) => todo.id !== action.payload.id);
-		},
 		editTodo: (state, action) => {
 			return state.map((todo) => {
 				if (todo.id === action.payload.id) {
 				  return {
 					...todo,
-					title: action.payload.title,
-				  };
-				}
-				return todo;
-			  });
-		}
-	},
+					title: action.payload.title }}
+				return todo
+			  })}},
+
 	extraReducers: {
-		[getTodosAsync.fulfilled]: (state, action) => {
-			return action.payload.todos;
+		[getTodos.fulfilled]: (state, action) => {
+			return action.payload.todos
 		},
-		[addTodoAsync.fulfilled]: (state, action) => {
-			state.push(action.payload.todo);
+		[createTodo.fulfilled]: (state, action) => {
+			state.push(action.payload.todo)
 		},
-		[toggleCompleteAsync.fulfilled]: (state, action) => {
-			const index = state.findIndex(
-				(todo) => todo.id === action.payload.todo.id
-			);
-			state[index].completed = action.payload.todo.completed;
+		[toggleComplete.fulfilled]: (state, action) => {
+			const index = state.findIndex((todo) => todo.id === action.payload.todo.id)
+			state[index].completed = action.payload.todo.completed
 		},
-		[deleteTodoAsync.fulfilled]: (state, action) => {
-			return state.filter((todo) => todo.id !== action.payload.id);
+		[deleteTodo.fulfilled]: (state, action) => {
+			return state.filter((todo) => todo.id !== action.payload.id)
 		},
-	},
-});
+	}
+})
 
-export const { addTodo, toggleComplete, deleteTodo, editTodo } = todoSlice.actions;
+export const { editTodo } = todoSlice.actions
 
-export default todoSlice.reducer;
+export default todoSlice.reducer
