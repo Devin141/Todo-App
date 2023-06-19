@@ -4,9 +4,9 @@ import { nanoid } from 'nanoid';
 export const getTodosAsync = createAsyncThunk(
 	'todos/getTodosAsync',
 	async () => {
-		const resp = await fetch('http://localhost:7000/todos');
-		if (resp.ok) {
-			const todos = await resp.json();
+		const res = await fetch('http://localhost:7000/todos');
+		if (res.ok) {
+			const todos = await res.json();
 			return { todos };
 		}
 	}
@@ -15,7 +15,7 @@ export const getTodosAsync = createAsyncThunk(
 export const addTodoAsync = createAsyncThunk(
 	'todos/addTodoAsync',
 	async (payload) => {
-		const resp = await fetch('http://localhost:7000/todos', {
+		const res = await fetch('http://localhost:7000/todos', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -23,8 +23,8 @@ export const addTodoAsync = createAsyncThunk(
 			body: JSON.stringify({ title: payload.title }),
 		});
 
-		if (resp.ok) {
-			const todo = await resp.json();
+		if (res.ok) {
+			const todo = await res.json();
 			return { todo };
 		}
 	}
@@ -33,7 +33,7 @@ export const addTodoAsync = createAsyncThunk(
 export const toggleCompleteAsync = createAsyncThunk(
 	'todos/completeTodoAsync',
 	async (payload) => {
-		const resp = await fetch(`http://localhost:7000/todos/${payload.id}`, {
+		const res = await fetch(`http://localhost:7000/todos/${payload.id}`, {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json',
@@ -41,8 +41,8 @@ export const toggleCompleteAsync = createAsyncThunk(
 			body: JSON.stringify({ completed: payload.completed }),
 		});
 
-		if (resp.ok) {
-			const todo = await resp.json();
+		if (res.ok) {
+			const todo = await res.json();
 			return { todo };
 		}
 	}
@@ -80,6 +80,17 @@ export const todoSlice = createSlice({
 		deleteTodo: (state, action) => {
 			return state.filter((todo) => todo.id !== action.payload.id);
 		},
+		editTodo: (state, action) => {
+			return state.map((todo) => {
+				if (todo.id === action.payload.id) {
+				  return {
+					...todo,
+					title: action.payload.title,
+				  };
+				}
+				return todo;
+			  });
+		}
 	},
 	extraReducers: {
 		[getTodosAsync.fulfilled]: (state, action) => {
@@ -100,6 +111,6 @@ export const todoSlice = createSlice({
 	},
 });
 
-export const { addTodo, toggleComplete, deleteTodo } = todoSlice.actions;
+export const { addTodo, toggleComplete, deleteTodo, editTodo } = todoSlice.actions;
 
 export default todoSlice.reducer;
