@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import createTodo from '../redux/generateActions';
 
 const AddTodoForm = () => {
 	const [value, setValue] = useState('');
+	const dispatch = useDispatch()
 
 	const onSubmit = (event) => {
 		event.preventDefault();
-		console.log('user entered: ' + value);
-	};
+		if (value) {
+			dispatch(
+				createTodo({
+					title: value,
+				})
+			);
+		}
+	}
 
 	return (
 		<form onSubmit={onSubmit} className='form-inline mt-3 mb-3'>
